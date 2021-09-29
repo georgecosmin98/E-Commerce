@@ -25,3 +25,6 @@ hs_err_pid*
 
 #Ignore all xml files
 *.xml
+
+#ignore all properties file
+*.properties
