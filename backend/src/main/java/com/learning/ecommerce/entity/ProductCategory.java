@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "product_cateogory")
+@Table(name = "product_category")
 //@Data -- bug with OneToMany and ManyToOne
 @Getter
 @Setter
