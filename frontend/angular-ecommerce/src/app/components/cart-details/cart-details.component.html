@@ -31,13 +31,18 @@
                                         {{tempCartItem.quantity}}
                                     </div>
                                     <div class="col">
-                                        <button class="btn btn-primary btn-sm">
+                                        <button class="btn btn-primary btn-sm"
+                                        (click)="decrementQuantity(tempCartItem)">
                                             <i class="fas fa-minus"></i>
                                         </button>
                                     </div>
                                     <div class="col-8"></div>
                                 </div>
                             </div>
+
+                            <button class="btn btn-primary btn-sm mt-2" style="background-color: #0d6efd;"
+                            (click)="remove(tempCartItem)">Remove</button>
+
                             <p class="mt-2">Subtotal: {{tempCartItem.quantity * tempCartItem.unitPrice | currency:
                                 'USD'}}
                             </p>
