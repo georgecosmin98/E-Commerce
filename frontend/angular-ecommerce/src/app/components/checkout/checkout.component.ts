@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Country } from 'src/app/common/country';
 import { State } from 'src/app/common/state';
+import { CartService } from 'src/app/services/cart.service';
 import { EcommerceFormService } from 'src/app/services/ecommerce-form.service';
 import { EcommerceValidators } from 'src/app/validators/ecommerce-validators';
 
@@ -26,9 +27,12 @@ export class CheckoutComponent implements OnInit {
   billingAddressStates: State[] = [];
 
   constructor(private formBuilder: FormBuilder,
-    private ecommerceFormService: EcommerceFormService) { }
+    private ecommerceFormService: EcommerceFormService,
+    private cartService: CartService) { }
 
   ngOnInit(): void {
+
+    this.reviewCartDetails();
 
     this.checkoutFormGroup = this.formBuilder.group({
       customer: this.formBuilder.group({
@@ -54,8 +58,8 @@ export class CheckoutComponent implements OnInit {
       creditCard: this.formBuilder.group({
         cardType: new FormControl('', [Validators.required]),
         nameOnCard: new FormControl('', [Validators.required, Validators.minLength(2), EcommerceValidators.notOnlyWhitespace]),
-        cardNumber: new FormControl('', [Validators.required,Validators.pattern('[0-9]{16}')]),
-        securityCode: new FormControl('', [Validators.required,Validators.pattern('[0-9]{3}')]),
+        cardNumber: new FormControl('', [Validators.required, Validators.pattern('[0-9]{16}')]),
+        securityCode: new FormControl('', [Validators.required, Validators.pattern('[0-9]{3}')]),
         expirationMonth: new FormControl('', [Validators.required]),
         expirationYear: new FormControl('', [Validators.required]),
       })
@@ -99,6 +103,23 @@ export class CheckoutComponent implements OnInit {
 
     console.log("The shipping address country is " + this.checkoutFormGroup.get('shippingAddress').value.country.name);
     console.log("The shipping address state is " + this.checkoutFormGroup.get('shippingAddress').value.state.name);
+  }
+
+  reviewCartDetails() {
+
+    // subscribe to cartService.totalQuantity
+    this.cartService.totalQuantity.subscribe(
+      totalQuantity => {
+        this.totalQuantity = totalQuantity;
+      }
+    )
+
+    // subscribe to cartService.totalPrice
+    this.cartService.totalPrice.subscribe(
+      totalPrice => {
+        this.totalPrice = totalPrice;
+      }
+    )
   }
 
   // Get customer fields
