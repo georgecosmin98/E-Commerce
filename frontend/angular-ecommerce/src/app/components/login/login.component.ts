@@ -14,7 +14,7 @@ export class LoginComponent implements OnInit {
   constructor(private oktaAuthService: OktaAuthService) {
     this.oktaSignIn = new OktaSignIn({
       logo: 'assets/images/logo.png',
-      baseUrl: myAppConfig.oidc.issuer.split('/oauth2')[2],
+      baseUrl: myAppConfig.oidc.issuer.split('/oauth2')[0],
       clientId: myAppConfig.oidc.clientId,
       redirectUri: myAppConfig.oidc.redirectUri,
       authParams: {
@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.oktaSignIn.remove();
-
+    console.log(myAppConfig.oidc.issuer.split('/oauth2')[0])
     this.oktaSignIn.renderEl({
       el: '#okta-sign-in-widget'}, // this name should be same as div tag id in login.component.html
       (response) => {
