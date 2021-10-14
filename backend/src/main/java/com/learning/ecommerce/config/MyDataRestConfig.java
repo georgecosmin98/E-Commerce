@@ -35,16 +35,19 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
         disableHttpMethod(Product.class, config, theUnsupportedActions);
 
         //disable HTTP methods for ProductCategory: PUT, POST and DELETE
-        disableHttpMethod(ProductCategory.class, config,theUnsupportedActions);
+        disableHttpMethod(ProductCategory.class, config, theUnsupportedActions);
 
         //disable HTTP methods for State: PUT, POST and DELETE
-        disableHttpMethod(State.class, config,theUnsupportedActions);
+        disableHttpMethod(State.class, config, theUnsupportedActions);
 
         //disable HTTP methods for Country: PUT, POST and DELETE
-        disableHttpMethod(Country.class, config,theUnsupportedActions);
+        disableHttpMethod(Country.class, config, theUnsupportedActions);
 
         // call an internal helper method
         exposeIds(config);
+
+        // configure cors mapping
+        cors.addMapping("/api/**").allowedOrigins("http://localhost:4200");
     }
 
     private void disableHttpMethod(Class theClass, RepositoryRestConfiguration config, HttpMethod[] theUnsupportedActions) {
