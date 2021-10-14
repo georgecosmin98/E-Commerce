@@ -39,7 +39,7 @@ const oktaConfig = Object.assign({
 }, myAppConfig.oidc)
 
 const routes: Routes = [
-  { path: 'members', component: MembersPageComponent, canActivate: [OktaAuthGuard] },
+  { path: 'members', component: MembersPageComponent, canActivate: [OktaAuthGuard] }, //OktaAuthGuard is used for protect route from unauthorised access
   { path: 'login/callback', component: OktaCallbackComponent },
   { path: 'login', component: LoginComponent },
   { path: 'checkout', component: CheckoutComponent },
