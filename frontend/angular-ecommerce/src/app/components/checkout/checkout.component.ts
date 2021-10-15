@@ -31,6 +31,8 @@ export class CheckoutComponent implements OnInit {
   shippingAddressStates: State[] = [];
   billingAddressStates: State[] = [];
 
+  storage: Storage = sessionStorage;
+
   constructor(private formBuilder: FormBuilder,
     private ecommerceFormService: EcommerceFormService,
     private cartService: CartService,
@@ -41,11 +43,14 @@ export class CheckoutComponent implements OnInit {
 
     this.reviewCartDetails();
 
+    // read the user's email address from browse storage
+    const theEmail = JSON.parse(this.storage.getItem('userEmail'));
+
     this.checkoutFormGroup = this.formBuilder.group({
       customer: this.formBuilder.group({
         firstName: new FormControl('', [Validators.required, Validators.minLength(2), EcommerceValidators.notOnlyWhitespace]),
         lastName: new FormControl('', [Validators.required, Validators.minLength(2), EcommerceValidators.notOnlyWhitespace]),
-        email: new FormControl('',
+        email: new FormControl(theEmail,
           [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')])
       }),
       shippingAddress: this.formBuilder.group({
@@ -104,12 +109,12 @@ export class CheckoutComponent implements OnInit {
     const invalid = [];
     const controls = this.checkoutFormGroup.controls;
     for (const name in controls) {
-        if (controls[name].invalid) {
-            invalid.push(name);
-        }
+      if (controls[name].invalid) {
+        invalid.push(name);
+      }
     }
     return invalid;
-}
+  }
 
   onSubmit() {
     console.log("Handling the submit button")
@@ -121,7 +126,7 @@ export class CheckoutComponent implements OnInit {
       this.checkoutFormGroup.markAllAsTouched();
       return;
     }
-   
+
     // set up order
     let order = new Order();
     order.totalPrice = this.totalPrice;
