@@ -1,5 +1,6 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { OktaAuthService } from '@okta/okta-angular';
 import { request } from 'http';
 import { from, Observable } from 'rxjs';
 
@@ -8,12 +9,27 @@ import { from, Observable } from 'rxjs';
 })
 export class AuthInterceptorService implements HttpInterceptor {
 
-  constructor() { }
+  constructor(private oktaAuth: OktaAuthService) { }
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return from(this.handleAccess(request, next));
   }
 
   private async handleAccess(request: HttpRequest<any>, next: HttpHandler): Promise<HttpEvent<any>> {
-    throw new Error('Method not implemented.');
+
+    // Only add an access token for secured endpoints
+    const securedEnpoints = ["http://localhost:8080/api/orders"];
+
+    if (securedEnpoints.some(url => request.urlWithParams.includes(url))) {
+      // Get access token
+      const accessToken = await this.oktaAuth.getAccessToken();
+
+      // Clone the request and add new header with access token
+      request = request.clone({
+        setHeaders: {
+          Authorization: 'Bearer ' + accessToken
+        }
+      });
+    }
+    return next.handle(request).toPromise();
   }
 }
